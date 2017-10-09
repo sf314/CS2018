@@ -42,7 +42,7 @@ float CSVolt::read() {
     debug("CSVolt.read(): ")
     float sum = 0;
     for (int index = 0; index < sampleSize; index++) {
-        float x = analogRead(6); // * 3.3 / 1024.0;
+        float x = analogRead(pin); // * 3.3 / 1024.0;
         sum += x;
         debug(String(x) + ", ")
         delay(10);
