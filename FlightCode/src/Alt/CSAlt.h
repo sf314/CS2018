@@ -5,6 +5,9 @@
 
 class CSAlt {
 public:
+    // Constructor
+    CSAlt();
+    
     // Config (in setup)
     void config();
     
@@ -17,5 +20,6 @@ public:
     
 private:
     double groundAlt;
+    MPL3115A2 hardware;
     
-}
+};
