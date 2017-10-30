@@ -4,6 +4,10 @@
 * 
 */
 
+#include <Arduino.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 class CSVolt {
 public:
@@ -18,7 +22,7 @@ public:
     // Data Acquisition
     float read();
     
-    void debugMode(bool newDebug);
+    void setDebugMode(bool newDebug);
     
 private:
     int pin;
@@ -27,4 +31,5 @@ private:
     int sampleSize;
     
     void debug(String str);
+    void debugln(String str);
 };
