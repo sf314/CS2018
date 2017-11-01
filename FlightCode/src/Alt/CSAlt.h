@@ -12,8 +12,8 @@ public:
     void config();
     
     // Reading stuff
-    double readRawAlt();
-    double readRadarAlt();
+    double readRaw();
+    double readRadar();
     
     // Special
     void setGroundAltitude(double x);

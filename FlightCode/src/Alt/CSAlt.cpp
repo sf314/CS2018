@@ -14,7 +14,7 @@ void CSAlt::config() {
     hardware.enableEventFlags();
 }
 
-double CSAlt::readRawAlt() {
+double CSAlt::readRaw() {
     double average = 0;
     
     for (int i = 0; i < 20; i++) {
@@ -27,8 +27,8 @@ double CSAlt::readRawAlt() {
     return average;
 }
 
-double CSAlt::readRadarAlt() {
-    return readRawAlt() - groundAlt;
+double CSAlt::readRadar() {
+    return readRaw() - groundAlt;
 }
 
 void CSAlt::setGroundAltitude(double x) {
