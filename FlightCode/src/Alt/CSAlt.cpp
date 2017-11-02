@@ -1,37 +1,24 @@
+// Stephen Flores
+// Implementation and whatnot
 
 #include "CSAlt.h"
 
+Intersema::BaroPressure_MS5607B private_baro(true);
 
-CSAlt::CSAlt() {
-    // Anything?
-    Wire.begin();
+void CSAlt::setGroundHeight(float gh) {
+    groundHeight = gh;
 }
 
-void CSAlt::config() {
-    hardware.begin();
-    hardware.setModeAltimeter();
-    hardware.setOversampleRate(7);
-    hardware.enableEventFlags();
+void CSAlt::init() {
+    private_baro.init();
 }
 
-double CSAlt::readRawAlt() {
-    double average = 0;
-    
-    for (int i = 0; i < 20; i++) {
-        average += hardware.readAltitude();
-        delay(10);
-    }
-    
-    average /= 20.0;
-    
-    return average;
+float CSAlt::alt() {
+    int altCM = private_baro.getHeightCentiMeters(); // centimeters
+    return ((float)altCM) / 100.0; // meters
 }
 
-double CSAlt::readRadarAlt() {
-    return readRawAlt() - groundAlt;
+float CSAlt::altRadar() {
+    float currentAlt = alt();
+    return currentAlt - groundHeight;
 }
-
-void CSAlt::setGroundAltitude(double x) {
-    groundAlt = x;
-}
-
