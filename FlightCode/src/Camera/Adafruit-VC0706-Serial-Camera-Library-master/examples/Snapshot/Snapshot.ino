@@ -32,7 +32,7 @@
 // Arduino Mega w/hardware SPI: pin 53
 // Teensy 2.0: pin 0
 // Teensy++ 2.0: pin 20
-#define chipSelect 15
+#define chipSelect 10
 
 // Pins for camera connection are configurable.
 // With the Arduino Uno, etc., most pins can be used, except for
@@ -179,5 +179,12 @@ void setup() {
 }
 
 void loop() {
+    // Try to take several pictures
+    Serial.println("Trying to take 5 successive pictures:");
+    
+    // 1
+    if (!cam.takePicture()) {
+        
+    }
 }
 
