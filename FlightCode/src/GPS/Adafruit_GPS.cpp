@@ -9,6 +9,7 @@ Written by Limor Fried/Ladyada for Adafruit Industries.
 BSD license, check license.txt for more information
 All text above must be included in any redistribution
 ****************************************/
+#include <Arduino.h>
 #include <SoftwareSerial.h>
 #include "Adafruit_GPS.h"
 
@@ -40,6 +41,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
       sum ^= nmea[i];
     }
     if (sum != 0) {
+        Serial.println("Adafruit_GPS.parse(): bad checksum");
       // bad checksum :(
       return false;
     }
@@ -49,6 +51,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
   char degreebuff[10];
   // look for a few common sentences
   if (strstr(nmea, "$GPGGA")) {
+      Serial.println("Adafruit_GPS.parse(): found $GPGGA");
     // found GGA
     char *p = nmea;
     // get time
@@ -152,6 +155,7 @@ boolean Adafruit_GPS::parse(char *nmea) {
     return true;
   }
   if (strstr(nmea, "$GPRMC")) {
+      Serial.println("Adafruit_GPS.parse(): found $GPRMC");
    // found RMC
     char *p = nmea;
 

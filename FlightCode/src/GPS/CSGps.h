@@ -9,38 +9,30 @@
 #include <SoftwareSerial.h>
 #include "Adafruit_GPS.h"
 
-
-// Things that shall exist in the global scope:
-SoftwareSerial ss(0, 1);
-Adafruit_GPS agps(&ss);
-
-class Dat {
-public:
-    Dat();
-    
-    // Meta
-    int satellites;
-    float altitude;
-    boolean fix;
-    
-    // Position: Degrees
-    float lat;
-    float lon;
-    
-    // Time: 
-    uint8_t hours, minute, seconds, year, month, day;
-    
-private:
-};
+// Had to put software serial and adafruit stuff in the .ccp file
 
 class CSGps {
 public:
     CSGps(); // Init
     void config();
     void update();
+    void debugln(String s);
+    void printAll();
     
-    Dat dat;
+    // Meta
+    int satellites;
+    float altitude;
+    bool fix;
+    
+    // Position: Degrees
+    float lat;
+    float lon;
+    
+    // Time: 
+    uint8_t hour, minute, seconds, year, month, day;
+    
 private:
+    bool shouldDebug;
 };
 
 
