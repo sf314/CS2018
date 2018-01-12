@@ -17,7 +17,10 @@ void CSCoreData::debugMode(bool b) {
 }
 
 void CSCoreData::deleteAll() {
-    
+    // Write zeroes to EEPROM (up to max 512 bytes)
+    for (int i = 0; i < 512; i++) {
+        EEPROM.write(i, 0);
+    }
 }
 
 void CSCoreData::writeLong(String key, long value) {
@@ -35,7 +38,7 @@ void CSCoreData::writeLong(String key, long value) {
         EEPROM.write(hashVal + i, arr[i]);
     }
     
-    debugln("CSCoreData: write " + String(value) + " @ " + String(hashVal));
+    debugln("CSCoreData: write " + String(value) + " @ " + String(hashVal) + " for key " + key);
 }
 
 void CSCoreData::writeInt(String key, int value) {
@@ -50,7 +53,7 @@ void CSCoreData::writeInt(String key, int value) {
     EEPROM.write(hashVal, upper);
     EEPROM.write(hashVal + 1, lower);
     
-    debugln("CSCoreData: write " + String(value) + " @ " + String(hashVal));
+    debugln("CSCoreData: write " + String(value) + " @ " + String(hashVal) + " for key " + key);
 }
 
 void CSCoreData::writeFloat(String key, float value) {
@@ -59,7 +62,7 @@ void CSCoreData::writeFloat(String key, float value) {
     float* pointerToFloat = &value;
     long* pointerAsLong = (long*)pointerToFloat;
     l = l | *pointerAsLong;
-    writeLong(key, l);
+    writeLong(key, l); // takes care of logging
 }
 
 long CSCoreData::readLong(String key) {
@@ -78,7 +81,7 @@ long CSCoreData::readLong(String key) {
         temp |= (arr[i] << (32 - (i + 1) * 8));
     }
     
-    debugln("CSCoreData: read " + String(temp) + " @ " + String(hashVal));
+    debugln("CSCoreData: read " + String(temp) + " @ " + String(hashVal) + " for key " + key);
     
     return temp;
 }
@@ -96,14 +99,14 @@ int CSCoreData::readInt(String key) {
     temp |= upper << 8;
     temp |= lower;
     
-    debugln("CSCoreData: read " + String(temp) + " @ " + String(hashVal));
+    debugln("CSCoreData: read " + String(temp) + " @ " + String(hashVal) + " for key " + key);
     
     return 0;
 }
 
 float CSCoreData::readFloat(String key) {
     // Float is 4 bytes, so just use long!
-    long l = readLong(key);
+    long l = readLong(key); // takes care of logging
     
     long* ptrToLong = &l;
     float* ptrToFloat = (float*)ptrToLong;
@@ -130,7 +133,8 @@ void CSCoreData::debugln(String s) {
     if (shouldDebug) {
         Serial.println(s);
     }
-}void CSCoreData::debug(String s) {
+}
+void CSCoreData::debug(String s) {
     if (shouldDebug) {
         Serial.print(s);
     }
