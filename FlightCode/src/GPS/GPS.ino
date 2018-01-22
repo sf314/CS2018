@@ -7,12 +7,15 @@
 #include "CSGps.h"
 
 // Things that shall exist in the global scope:
-CSGps gps;
+SoftwareSerial gpsss(7, 8); // Rx, Tx (MISO, MOSI)
+Adafruit_GPS agps(&gpsss);
+CSGps gps(&agps);
 
 void setup() {
     Serial.begin(9600);
     
     gps.config();
+    gps.shouldDebug = true;
     delay(1000);
 }
 

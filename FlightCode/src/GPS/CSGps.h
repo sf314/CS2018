@@ -13,7 +13,7 @@
 
 class CSGps {
 public:
-    CSGps(); // Init
+    CSGps(Adafruit_GPS* agps); // Init
     void config();
     void update();
     void debugln(String s);
@@ -33,6 +33,7 @@ public:
     
     bool shouldDebug;
 private:
+    Adafruit_GPS* adaGpsPtr;
 };
 
 
