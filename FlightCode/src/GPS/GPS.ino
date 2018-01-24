@@ -1,27 +1,45 @@
 // Test the GPS Module
 
+#include <Arduino.h>
 #include <SoftwareSerial.h>
+#include "Adafruit_GPS.h"
 
-SoftwareSerial gps(7, 8);
+#include "CSGps.h"
+
+// Things that shall exist in the global scope:
+SoftwareSerial gpsss(7, 8); // Rx, Tx (MISO, MOSI)
+Adafruit_GPS agps(&gpsss);
+CSGps gps(&agps);
 
 void setup() {
-    gps.begin(9600);
     Serial.begin(9600);
     
+    gps.config();
+    gps.shouldDebug = true;
+    delay(1000);
 }
 
+long currentTime = 0;
+long previousTime = 0;
 
 void loop() {
-    // if (gps.available()) {
-    //     Serial.print("Got from GPS: ");
-    //     while (gps.available()) {
-    //         char c = gps.read();
-    //         Serial.print(c);
-    //     }
-    //     Serial.println();
-    // } else {
-    //     //Serial.println("Nothing!");
-    // }
+    // Keep track of time constantly
+    currentTime = millis();
     
+    // Update GPS constantly
+    gps.update();
+    
+    // Periodically print data
+    if (currentTime - previousTime >= 1000) {
+        // Pretend main code here
+        Serial.println("Main!");
+        
+        // Do things for other subsystems
+        // ...
+        
+        // Print GPS status stuff
+        gps.printAll();
+        previousTime = currentTime;
+    }
     
 }

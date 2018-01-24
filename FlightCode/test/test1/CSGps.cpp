@@ -5,9 +5,11 @@
 
 #include "CSGps.h"
 
+// This stuff has to go here for reasons.
+SoftwareSerial gpsss(7, 8); // Rx, Tx (MISO, MOSI)
+Adafruit_GPS agps(&gpsss);
 
-CSGps::CSGps(Adafruit_GPS* agps) {
-    adaGpsPtr = agps;
+CSGps::CSGps() {
     satellites = 0;
     altitude = 0;
     fix = false;
@@ -22,45 +24,38 @@ CSGps::CSGps(Adafruit_GPS* agps) {
 
 void CSGps::update() {
     // Call this as often as possible!
-    if (adaGpsPtr->newNMEAreceived()) {
+    if (agps.newNMEAreceived()) {
         debugln("New NMEA sentence received");
         
-        if (!adaGpsPtr->parse(adaGpsPtr->lastNMEA())) {
+        if (!agps.parse(agps.lastNMEA())) {
             debugln("Failed to parse sentence!");
         } else {
             // Data updated here
             debugln("Data fields updated");
-            hour = adaGpsPtr->hour;
-            minute = adaGpsPtr->minute;
-            seconds = adaGpsPtr->seconds;
+            hour = agps.hour;
+            minute = agps.minute;
+            seconds = agps.seconds;
             
-            year = adaGpsPtr->year;
-            month = adaGpsPtr->month;
-            day = adaGpsPtr->day;
+            year = agps.year;
+            month = agps.month;
+            day = agps.day;
             
-            fix = adaGpsPtr->fix;
-            lat = adaGpsPtr->latitudeDegrees;
-            lon = adaGpsPtr->longitudeDegrees;
-            altitude = adaGpsPtr->altitude;
+            fix = agps.fix;
+            lat = agps.latitudeDegrees;
+            lon = agps.longitudeDegrees;
+            altitude = agps.altitude;
         }
     }
-    
-    // Raw printing of serial data
-    if (shouldDebug) {
-        char c = adaGpsPtr->read(); 
-        Serial.print(c);
-    }
-    
 }
 
 void CSGps::config() {
     debugln("Configure");
-    adaGpsPtr->begin(9600); // throws error?
+    agps.begin(9600); // throws error?
     
     // Send commands for setting output
-    adaGpsPtr->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-    adaGpsPtr->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-    // adaGpsPtr->sendCommand(PGCMD_ANTENNA); // This one too?
+    agps.sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
+    agps.sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
+    // agps.sendCommand(PGCMD_ANTENNA); // This one too?
 }
 
 void CSGps::debugln(String s) {
