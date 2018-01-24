@@ -1,25 +1,21 @@
-// Altimeter Class
+// Stephen Flores
+// Implementing CSAlt code
+// Barometer class
+// Has access to pressure, temperature, and altitude
+// Uses proprietary library (really big)
 
-// Inclusions
-#include "SparkFunMPL3115A2.h"
+#ifndef _CSAlt
+#define _CSAlt
+#include "IntersemaBaro.h"
 
 class CSAlt {
 public:
-    // Constructor
-    CSAlt();
-    
-    // Config (in setup)
-    void config();
-    
-    // Reading stuff
-    double readRawAlt();
-    double readRadarAlt();
-    
-    // Special
-    void setGroundAltitude(double x);
-    
+    void init();
+    float alt();
+    float altRadar();
+    void setGroundHeight(float gh);
 private:
-    double groundAlt;
-    MPL3115A2 hardware;
-    
+    float groundHeight = 0;
 };
+
+#endif

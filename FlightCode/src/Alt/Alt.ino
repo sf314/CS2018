@@ -9,12 +9,12 @@ CSAlt altimeter;
 void setup() {
     Serial.begin(9600);
     Serial.println("Starting up!");
-    altimeter.config();
-    altimeter.setGroundAltitude(altimeter.readRawAlt());
+    altimeter.init();
+    altimeter.setGroundHeight(altimeter.alt());
 }
 
 void loop() {
     Serial.print("Alt: ");
-    Serial.println(altimeter.readRadarAlt());
+    Serial.println(altimeter.altRadar());
     delay(250);
 }
