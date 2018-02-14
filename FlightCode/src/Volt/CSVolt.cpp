@@ -16,14 +16,15 @@ CSVolt::CSVolt() {
 }
 
 // Configuration options
-void CSVolt::config(int p, float v) {
+void CSVolt::config(int p) {
     pin = p;
-    maxVoltage = v;
+    pinMode(p, INPUT);
+    analogReference(DEFAULT);
+    analogReadResolution(12);
 }
 
 // Specific configuration
 void CSVolt::setPin(int newPin) {pin = newPin;}
-void CSVolt::setVoltage(float newVoltage) {maxVoltage = newVoltage;}
 void CSVolt::setSampleSize(int samples) {sampleSize = samples;}
 void CSVolt::setDebugMode(bool newDebug) {debugMode = newDebug;}
 
@@ -51,7 +52,10 @@ float CSVolt::read() {
         delay(10);
     }
     
-    float average = sum / 10.0;
+    float average = sum / sampleSize;
     debugln("\n\tAverage: " + String(average));
-    return average;
+    
+    float volt = average / 4095.0 * 3.3;
+    float volt2 = (volt * 32.0 / 10);// - 0.32; // * 3.2?
+    return volt2;
 }

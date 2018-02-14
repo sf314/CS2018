@@ -43,10 +43,13 @@ void CSGps::update() {
             lon = adaGpsPtr->longitudeDegrees;
             altitude = adaGpsPtr->altitude;
         }
+    } else {
+        // debugln("No new packet");
     }
     
     // Raw printing of serial data
     if (shouldDebug) {
+        // debugln("Raw:");
         char c = adaGpsPtr->read(); 
         Serial.print(c);
     }
@@ -79,6 +82,14 @@ void CSGps::printAll() {
     Serial.print("\tLon: "); Serial.println(lon);
     Serial.print("\tSec: "); Serial.println(seconds);
     Serial.println("\n\n");
+}
+
+bool CSGps::available() {
+    return adaGpsPtr->gpsSwSerial->available();
+}
+
+char CSGps::read() {
+    return adaGpsPtr->read();
 }
 
 #endif

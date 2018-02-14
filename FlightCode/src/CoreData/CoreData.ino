@@ -10,8 +10,8 @@ CSCoreData coreData;
 int pass = 0;
 int fail = 0;
 bool CSAssert(bool b) {
-    if (b) {pass++;}
-    else   {fail++;}
+    if (b) {pass++; Serial.println("Test pass");}
+    else   {fail++; Serial.println("Test fail");}
     
     return b;
 }
@@ -39,11 +39,12 @@ void setup() {
     Serial.println("Saved " + String(f));
     
     // Read values back and print them!
+    Serial.println("\n\n");
     long l2 = coreData.readLong("long");
     Serial.println("Read " + String(l2));
     
     int i2 = coreData.readInt("int");
-    Serial.println("Read " + String(i));
+    Serial.println("Read " + String(i2));
     
     float f2 = coreData.readFloat("float");
     Serial.println("Read " + String(f2));

@@ -19,6 +19,9 @@ public:
     void debugln(String s);
     void printAll();
     
+    bool available();
+    char read();
+    
     // Meta
     int satellites;
     float altitude;

@@ -132,11 +132,12 @@ class Adafruit_GPS {
 
   uint16_t LOCUS_serial, LOCUS_records;
   uint8_t LOCUS_type, LOCUS_mode, LOCUS_config, LOCUS_interval, LOCUS_distance, LOCUS_speed, LOCUS_status, LOCUS_percent;
+  SoftwareSerial *gpsSwSerial;
  private:
   boolean paused;
   
   uint8_t parseResponse(char *response);
-    SoftwareSerial *gpsSwSerial;
+    
 };
 
 

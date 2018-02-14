@@ -22,6 +22,9 @@ public:
     void deactivate();
     void toggle();
     void playSong(); // time-dependent, run like main
+    void playStartup(); // Note: uses delays. Takes 1 sec.
+    
+    // Two-wire interface
 private:
     bool shouldDebug;
     bool isOn;

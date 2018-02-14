@@ -7,8 +7,18 @@ CSBuzzer buzzer;
 
 void setup() {
     Serial.begin(9600);
-    buzzer.config(23);
-    buzzer.setDebugMode(true);
+    
+    // buzzer.config(20);
+    // buzzer.setDebugMode(true);
+    // 
+    // delay(300);
+    // noTone(20);
+    // buzzer.playStartup();
+    // delay(300);
+    
+    pinMode(20, OUTPUT);
+    pinMode(21, OUTPUT);
+    delay(500);
 }
 
 void loop() {
@@ -21,13 +31,26 @@ void loop() {
             case 'p':
                 buzzer.playSong();
                 break;
+            case 's':
+                buzzer.playStartup();
+                break;
+            case 'e':
+                Serial.println("on");
+                digitalWrite(20, HIGH);
+                digitalWrite(21, LOW);
+                break;
+            case 'r':
+                Serial.println("off");
+                digitalWrite(20, LOW);
+                digitalWrite(21, LOW);
+                break;
             default:
-                Seria.println("Invalid command");
+                Serial.println("Invalid command");
         }
     }
     
     // Buzzer runs infinitely in the background
-    buzzer.main();
+    // buzzer.main();
 }
 
 

@@ -1,7 +1,13 @@
 Pin assignments:
-Camera: 12
-Altimeter: (I2C)
+Camera:
+Altimeter: (19,18) (I2C: SCL,SDA)
 GPS: (7, 8) (MISO, MOSI)
-Buzzer; 23
+Buzzer; 20
 RTC: (same as GPS)
 Nichrome: 
+SD: 
+
+New redboard pinout:
+Temp: pin 14
+XBee: (0,1) (MISO, MOSI)
+GPS: (7,8) (MISO, MOSI)

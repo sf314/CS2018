@@ -101,7 +101,7 @@ int CSCoreData::readInt(String key) {
     
     debugln("CSCoreData: read " + String(temp) + " @ " + String(hashVal) + " for key " + key);
     
-    return 0;
+    return temp; // wow
 }
 
 float CSCoreData::readFloat(String key) {

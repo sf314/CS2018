@@ -18,6 +18,11 @@ CSBuzzer::CSBuzzer() {
 void CSBuzzer::config(int p) {
     pin = p;
     pinMode(p, OUTPUT);
+    pinMode(p + 1, OUTPUT);
+    digitalWrite(pin, LOW);
+    digitalWrite(pin + 1, LOW);
+    isOn = false;
+    songMode = false;
     debugln("CSBuzzer: configured on pin " + String(p));
 }
 
@@ -72,11 +77,17 @@ void CSBuzzer::main() {
     }
     
     if (isOn) {
+        //digitalWrite(pin, HIGH);
+        //tone(pin, 700);
+        
         digitalWrite(pin, HIGH);
-        tone(23, 700);
+        digitalWrite(pin + 1, LOW);
     } else {
+        //digitalWrite(pin, LOW);
+        //tone(pin, 700);
+        
         digitalWrite(pin, LOW);
-        tone(23, 700);
+        digitalWrite(pin + 1, LOW);
     }
     
 }
@@ -86,4 +97,16 @@ void CSBuzzer::sing() {
     // Oh dear
     // queue?
     // Remove from queue when deltaT exceeds node time
+}
+
+void CSBuzzer::playStartup() {
+    tone(pin, 523);
+    delay(300);
+    tone(pin, 659);
+    delay(300);
+    tone(pin, 784);
+    delay(300);
+    tone(pin, 1046);
+    delay(300);
+    noTone(pin);
 }
