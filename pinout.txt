@@ -7,7 +7,8 @@ RTC: (same as GPS)
 Nichrome: 
 SD: 
 
-New redboard pinout:
+New redboard1 pinout:
 Temp: pin 14
 XBee: (0,1) (MISO, MOSI)
 GPS: (7,8) (MISO, MOSI)
+Buzzer: 17 (passive, can use tone() library!

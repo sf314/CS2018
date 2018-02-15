@@ -15,6 +15,7 @@ public:
     void config(int p, int v);
     
     float read();
+    int readRaw();
 private:
     int pin;
     int voltage;

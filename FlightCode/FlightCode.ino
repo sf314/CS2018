@@ -1,77 +1,64 @@
 /*
 ASU CanSat Flight Software
-*/
+Stephen Flores
 
+Confirmed operational:
+CSTemp(pin: 14, volt: 3300)
+
+*/
 
 // *** Inclusions
 #include <SoftwareSerial.h>
 #include "src/Comms/CSComms.h"
-#include "src/Buzzer/CSBuzzer.h"
-#include "src/GPS/CSGps.h"
+#include "src/Temp/CSTemp.h"
 
 // *** Objects
 SoftwareSerial s(0, 1); // MOSI, MISO
 CSComms xbee(&s);
+CSTemp temp;
+SoftwareSerial gps(7,8);
 
-SoftwareSerial gpsss(7, 8); // Rx, Tx (MISO, MOSI)
-Adafruit_GPS agps(&gpsss);
-CSGps gps(&agps);
-
-CSBuzzer buzzer;
-
-// *** Setup
-
-
-void setup() {
-    Serial.begin(9600);
-    s.begin(9600);
-    
-    xbee.config();
-    buzzer.config(20);
-    
-    xbee.begin(9600);
-    gps.config();
-    gps.shouldDebug = true;
-    buzzer.setDebugMode(true);
-    
-}
-
-
+// *** Vars
 long currentTime = 0;
 long previousTime = 0;
+String dataString = "";
 
+
+// *** Setup
+void setup() {
+    Serial.begin(9600);
+    xbee.begin(9600);
+    gps.begin(9600);
+
+    xbee.config();
+    temp.config(14, 3300);
+}
+
+// *** Loop
 void loop() {
-    
-    // GPS Test loop (using raw s);
-    while (1) {
-        if (s.available()) {
-            //Serial.println("Received char!");
-            char c = s.read();
-            Serial.print(c);
-        } else {
-            
-        }
-        
-        if (Serial.available()) {
-            while (1) {};
-        }
-        
-        delay(0);
-    }
     
     currentTime = millis();
     checkForCommands();
     
     if (currentTime - previousTime >= 1000) {
         Serial.println("\n\nMain");
-        gps.printAll();
+        dataString = "";
+
+        dataString += String(currentTime) + ",";
+        dataString += String(temp.readRaw()) + ",";
+        dataString += String(temp.read()) + ",";
+
+        Serial.println(dataString);
+        xbee.println(dataString);
         
         previousTime = currentTime;
     }
+
+    // Check gps
+    if (gps.available()) {
+    	Serial.print((char)gps.read());
+    }
     
-    // Constant proc
-    gps.update();
-    buzzer.main();
 }
 
 void checkForCommands() {
@@ -79,10 +66,10 @@ void checkForCommands() {
         char c = xbee.read();
         switch (c) {
             case 'a':
-                buzzer.activate();
+                //buzzer.activate();
                 break;
             case 's':
-                buzzer.deactivate();
+                //buzzer.deactivate();
                 break;
             default:
                 xbee.println("Invalid command");
@@ -93,10 +80,10 @@ void checkForCommands() {
         char c = Serial.read();
         switch (c) {
             case 'a':
-                buzzer.activate();
+                //buzzer.activate();
                 break;
             case 's':
-                buzzer.deactivate();
+                //buzzer.deactivate();
                 break;
             default:
                 Serial.println("Invalid command");

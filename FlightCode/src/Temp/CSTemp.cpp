@@ -23,3 +23,7 @@ float CSTemp::read() {
     //double fahrenheit =  celsius * 1.8 + 32;
     return celsius;
 }
+
+int CSTemp::readRaw() {
+    return analogRead(pin);
+}
