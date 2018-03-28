@@ -11,11 +11,13 @@ CSTemp(pin: 14, volt: 3300)
 #include <SoftwareSerial.h>
 #include "src/Comms/CSComms.h"
 #include "src/Temp/CSTemp.h"
+#include "src/Alt/CSAlt.h"
 
 // *** Objects
 SoftwareSerial s(0, 1); // MOSI, MISO
 CSComms xbee(&s);
 CSTemp temp;
+CSAlt alt;
 SoftwareSerial gps(7,8);
 
 // *** Vars
@@ -29,9 +31,11 @@ void setup() {
     Serial.begin(9600);
     xbee.begin(9600);
     gps.begin(9600);
+    alt.init();
 
     xbee.config();
     temp.config(14, 3300);
+    alt.setGroundHeight(alt.alt());
 }
 
 // *** Loop
@@ -45,8 +49,8 @@ void loop() {
         dataString = "";
 
         dataString += String(currentTime) + ",";
-        dataString += String(temp.readRaw()) + ",";
         dataString += String(temp.read()) + ",";
+        dataString += String(alt.alt()) + ","; 
 
         Serial.println(dataString);
         xbee.println(dataString);
