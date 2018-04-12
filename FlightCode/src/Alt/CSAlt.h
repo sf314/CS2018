@@ -11,7 +11,7 @@
 class CSAlt {
 public:
     void init();
-    float alt();
+    float read();
     float altRadar();
     void setGroundHeight(float gh);
 private:

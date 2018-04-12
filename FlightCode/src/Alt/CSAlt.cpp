@@ -13,12 +13,12 @@ void CSAlt::init() {
     private_baro.init();
 }
 
-float CSAlt::alt() {
+float CSAlt::read() {
     int altCM = private_baro.getHeightCentiMeters(); // centimeters
     return ((float)altCM) / 100.0; // meters
 }
 
 float CSAlt::altRadar() {
-    float currentAlt = alt();
+    float currentAlt = read();
     return currentAlt - groundHeight;
 }

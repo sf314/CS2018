@@ -17,8 +17,8 @@ public:
     void setDebugMode(bool b);
     
     // Logging data
-    bool write(String s);
-    bool log(String s);
+    bool write(String s); // Write to main telem
+    bool log(String s); // Write to aux logfile
     void debug(String s);
 private:
     bool debugMode;

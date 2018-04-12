@@ -56,7 +56,7 @@ bool CSLog::write(String s) {
 bool CSLog::log(String s) {
     dataFile = SD.open("log.csv", FILE_WRITE);
     if (dataFile) {
-        dataFile.println(s);
+        dataFile.println(String(millis()) + ": " + s);
         dataFile.close();
         return true;
     } else {

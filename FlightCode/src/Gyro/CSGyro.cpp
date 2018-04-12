@@ -10,7 +10,7 @@ CSGyro::CSGyro() {
     imu.initAK8963(imu.magCalibration);
 }
 
-float CSGyro::getDat() {
+GyroData_t CSGyro::getData() {
     // Cool, works. Lines 215 - 222 in MPU9250BasicAHRS.ino
     
     // Init stuff
@@ -23,5 +23,10 @@ float CSGyro::getDat() {
     imu.gy = (float)imu.gyroCount[1]*imu.gRes;
     imu.gz = (float)imu.gyroCount[2]*imu.gRes;
     
-    return imu.gx;
+    GyroData_t g;
+    g.x = imu.gx;
+    g.y = imu.gy;
+    g.z = imu.gz;
+    
+    return g;
 }

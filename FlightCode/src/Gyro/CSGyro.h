@@ -11,6 +11,12 @@
 // #include "SparkFunIMU.h"
 #include "MPU9250.h"
 
+typedef struct {
+    float x;
+    float y;
+    float z;
+} GyroData_t;
+
 class CSGyro {
 public:
     // Init
@@ -19,7 +25,7 @@ public:
     // Vars
     
     // Funcs
-    float getDat();
+    GyroData_t getData();
     
 private:
     // MPU_9250 myIMU;
