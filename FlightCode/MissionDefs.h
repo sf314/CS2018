@@ -1,0 +1,4 @@
+
+
+#define CS_MIN_FLIGHT_THRESH 30
+#define CS_CUTTIME 4

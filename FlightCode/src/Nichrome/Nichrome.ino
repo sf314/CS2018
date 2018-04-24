@@ -5,21 +5,24 @@ CSNichrome nichrome;
 
 void setup() {
     Serial.begin(9600);
-    nichrome = CSNichrome(23);
+    nichrome = CSNichrome(3);
+    Serial.println("Nichrome test on pin " + String(nichrome.pin));
 }
 
 void loop() {
-    Serial.println("Burining in 3s...");
-    delay(3000);
-    
-    Serial.print("Burn on pin ");
-    Serial.println(nichrome.pin);
-    nichrome.start();
-    
-    delay(5000);
-    
-    Serial.println("Stop!");
-    nichrome.stop();
-    
-    delay(5000);
+    if (Serial.available()) {
+        char c = Serial.read();
+        switch (c) {
+            case 'a':
+                nichrome.start();
+                Serial.println("Start!");
+                break;
+            case 'z':
+                nichrome.stop();
+                Serial.println("Stop!");
+                break;
+            default:
+                Serial.println("Invalid command!");
+        }
+    }
 }

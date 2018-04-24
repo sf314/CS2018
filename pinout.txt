@@ -4,7 +4,7 @@ Altimeter: (19,18) (I2C: SCL,SDA)
 GPS: (7, 8) (MISO, MOSI)
 Buzzer; 20
 RTC: (same as GPS)
-Nichrome: 
+Nichrome: 3
 SD: 
 
 New redboard1 pinout:

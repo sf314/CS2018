@@ -10,20 +10,24 @@ The file structure will attempt to somewhat resemble CFS
 
 // *** Inclusions
 #include <SoftwareSerial.h>
-// #include "src/Comms/CSComms.h"
-// #include "src/Temp/CSTemp.h"
+#include <EEPROM.h>
+#include "MissionDefs.h"
+#include "src/Telem/CSTelem.h"
+#include "src/Comms/CSComms.h"
+#include "src/Temp/CSTemp.h"
 #include "src/Alt/CSAlt.h"
-#include "src/Log/CSLog.h"
+// #include "src/Log/CSLog.h"
 #include "src/Gyro/CSGyro.h"
 
 // *** Objects
-// SoftwareSerial s(0, 1); // MOSI, MISO
+SoftwareSerial xbee(0, 1); // MOSI, MISO
 // CSComms xbee(&s);
-// CSTemp temp;
-// SoftwareSerial gps(7,8);
+CSTemp temp;
+SoftwareSerial gps(7,8);
 CSAlt alt;
-CSLog sd;
+// CSLog sd;
 CSGyro gyro;
+CSTelem telem;
 
 // *** Vars
 long currentTime    = 0;
@@ -31,33 +35,36 @@ long previousTime   = 0;
 String dataString   = "";
 
 // *** State Vars
-int state = 0;
-    const int state_boot        = 0;
-    const int state_launchpad   = 1;
-    const int state_flight      = 2;
-    const int state_deploy      = 3;
-    const int state_descent     = 4;
-    const int state_landed      = 5;
+const int state_boot        = 0;
+const int state_launchpad   = 1;
+const int state_flight      = 2;
+const int state_deploy      = 3;
+const int state_descent     = 4;
+const int state_landed      = 5;
 
 // *** Telemetry
-float altitude;
-float temperature;
-GyroData_t gyroData;
+double vel = 0.0;
+double prevAlt = 0.0;
 
 
 // ********** Setup ***********************************************************
 void setup() {
     Serial.begin(9600);
+    xbee.begin(9600);
+    gps.begin(9600);
     Wire.begin();
     // xbee.begin(9600);
     // gps.begin(9600);
     alt.init();
-    sd.config(1);
+    // sd.config(1);
+    temp.config(14,3300);
     
+    telem.teamID = 1234;
     // xbee.config();
     // temp.config(14, 3300);
     alt.setGroundHeight(alt.read());
-    sd.log("Booted up");
+    // sd.log("Booted up");
+    telem.state = state_landed;
 }
 
 // ********** Loop ************************************************************
@@ -71,18 +78,27 @@ void loop() {
         dataString = "";
         
         // Update telemetry
-        altitude = alt.read();
-        gyroData = gyro.getData();
+        
+        telem.altitude = alt.read(); 
+        telem.temp = temp.read();
+        
+        
+        GyroData_t gyroData = gyro.getData();
+        telem.gyro_x = gyroData.x;
+        telem.gyro_y = gyroData.y;
+        telem.gyro_z = gyroData.z;
         
         // Update telemetry string
-        dataString += String(currentTime) + ",";
-        dataString += String(altitude) + ","; 
-        dataString += String(gyroData.x) + ",";
-        dataString += String(gyroData.y) + ",";
-        dataString += String(gyroData.z) + ",";
+        dataString = telem.asString();
+        // sd.write(dataString);
+        Serial.println(dataString);
+        
+        // Update velocity
+        vel = telem.altitude - prevAlt;
+        prevAlt = telem.altitude;
         
         // Switch on state
-        switch (state) {
+        switch (telem.state) {
             case state_boot:
                 boot_ops();
                 break;
@@ -102,13 +118,11 @@ void loop() {
                 landed_ops();
                 break;
             default:
-                sd.log("Invalid state: " + String(state));
+                // sd.log("Invalid state: " + String(state));
+                break;
         }
         
-
-        Serial.println(dataString);
-        sd.write(dataString);
-        // xbee.println(dataString);
+        xbee.println(dataString);
         
         previousTime = currentTime;
     }
@@ -116,9 +130,9 @@ void loop() {
     // ***** Parallel threads:
 
     // Update GPS
-    // if (gps.available()) {
-    // 	Serial.print((char)gps.read());
-    // }
+    if (gps.available()) {
+    	Serial.print((char)gps.read());
+    }
     
     // Update buzzer
     
@@ -128,19 +142,19 @@ void loop() {
 
 // ********** Handle incoming communications **********************************
 void checkForCommands() {
-    // if (xbee.available()) {
-    //     char c = xbee.read();
-    //     switch (c) {
-    //         case 'a':
-    //             //buzzer.activate();
-    //             break;
-    //         case 's':
-    //             //buzzer.deactivate();
-    //             break;
-    //         default:
-    //             xbee.println("Invalid command");
-    //     }
-    // }
+    if (xbee.available()) {
+        char c = xbee.read();
+        switch (c) {
+            case 'a':
+                //buzzer.activate();
+                break;
+            case 's':
+                //buzzer.deactivate();
+                break;
+            default:
+                xbee.println("Invalid command: " + String(c));
+        }
+    }
     
     if (Serial.available()) {
         char c = Serial.read();
@@ -152,7 +166,7 @@ void checkForCommands() {
                 //buzzer.deactivate();
                 break;
             default:
-                Serial.println("Invalid command");
+                Serial.println("Invalid command: " + String(c));
         }
     }
 }
@@ -163,15 +177,23 @@ void checkForCommands() {
 
 // ********** State Operations ************************************************
 void boot_ops() {
-    
+    // On boot, check previous state and time from EEPROM
+    // Make sure to recover state, met, and groundAlt
 }
 
 void launchpad_ops() {
-    
+    // Check for increase in altitude
+    if (telem.altitude >= CS_MIN_FLIGHT_THRESH) {
+        telem.state = state_flight;
+    }
 }
 
 void flight_ops() {
-    
+    bool goingDown = (vel < -5.0);
+    bool atAlt = (telem.altitude <= 310.0);
+    if (goingDown && atAlt) {
+        telem.state = state_deploy;
+    }
 }
 
 void deploy_ops() {
@@ -183,5 +205,5 @@ void descent_ops() {
 }
 
 void landed_ops() {
-    
+    Serial.println("Testing...");
 }
