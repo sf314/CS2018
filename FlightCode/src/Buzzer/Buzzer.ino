@@ -5,6 +5,8 @@
 
 CSBuzzer buzzer;
 
+int buzzpin = 17;
+
 void setup() {
     Serial.begin(9600);
     
@@ -16,41 +18,59 @@ void setup() {
     // buzzer.playStartup();
     // delay(300);
     
-    pinMode(20, OUTPUT);
-    pinMode(21, OUTPUT);
-    delay(500);
+    // pinMode(20, OUTPUT);
+    // pinMode(21, OUTPUT);
+    // delay(500);
+
+    // Basic test 
+    pinMode(buzzpin, OUTPUT);
 }
 
 void loop() {
-    if (Serial.available()) {
-        char c = Serial.read();
-        switch (c) {
-            case 'b':
-                buzzer.toggle();
-                break;
-            case 'p':
-                buzzer.playSong();
-                break;
-            case 's':
-                buzzer.playStartup();
-                break;
-            case 'e':
-                Serial.println("on");
-                digitalWrite(20, HIGH);
-                digitalWrite(21, LOW);
-                break;
-            case 'r':
-                Serial.println("off");
-                digitalWrite(20, LOW);
-                digitalWrite(21, LOW);
-                break;
-            default:
-                Serial.println("Invalid command");
-        }
-    }
+    // if (Serial.available()) {
+    //     char c = Serial.read();
+    //     switch (c) {
+    //         case 'b':
+    //             buzzer.toggle();
+    //             break;
+    //         case 'p':
+    //             buzzer.playSong();
+    //             break;
+    //         case 's':
+    //             buzzer.playStartup();
+    //             break;
+    //         case 'e':
+    //             Serial.println("on");
+    //             digitalWrite(20, HIGH);
+    //             digitalWrite(21, LOW);
+    //             break;
+    //         case 'r':
+    //             Serial.println("off");
+    //             digitalWrite(20, LOW);
+    //             digitalWrite(21, LOW);
+    //             break;
+    //         default:
+    //             Serial.println("Invalid command");
+    //     }
+    // }
     
     // Buzzer runs infinitely in the background
     // buzzer.main();
+
+    if (Serial.available()) {
+        char c = Serial.read();
+        switch (c) {
+            case 'a':
+                digitalWrite(buzzpin, HIGH);
+                break;
+            case 'z':
+                digitalWrite(buzzpin, LOW);
+                break;
+            default:
+                Serial.println("Bad command!");
+        }
+    }
+
 }
 
 

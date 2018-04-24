@@ -1,11 +1,12 @@
 Pin assignments:
-Camera:
+Camera: 20
 Altimeter: (19,18) (I2C: SCL,SDA)
 GPS: (7, 8) (MISO, MOSI)
 Buzzer; 20
 RTC: (same as GPS)
-Nichrome: 3
-SD: 
+Nichrome: 2
+Volt: 15
+SD: 10
 
 New redboard1 pinout:
 Temp: pin 14

@@ -7,8 +7,8 @@ CSVolt volt;
 
 void setup() {
     Serial.begin(9600);
-    volt.config(16);
-    volt.setDebugMode(false);
+    volt.config(15);
+    volt.setDebugMode(true);
     
     // pinMode(16, INPUT);
     // analogReference(DEFAULT);
@@ -30,7 +30,7 @@ void loop() {
 
     Serial.println(volt.read());
     
-    delay(1000);
+    delay(500);
 }
 
 
@@ -39,4 +39,6 @@ Want, Got
 5.24, 5.57
 5.50, 5.82
 5.05, 5.37
+
+Off by 0.325!
 */
