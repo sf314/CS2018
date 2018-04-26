@@ -1,5 +1,5 @@
 Pin assignments:
-Camera: 20
+Camera: 5
 Altimeter: (19,18) (I2C: SCL,SDA)
 GPS: (7, 8) (MISO, MOSI)
 Buzzer; 20
