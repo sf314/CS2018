@@ -18,16 +18,19 @@ The file structure will attempt to somewhat resemble CFS
 #include "src/Alt/CSAlt.h"
 // #include "src/Log/CSLog.h"
 #include "src/Gyro/CSGyro.h"
+#include "src/GPS/CSGps.h"
+#include "src/Nichrome/CSNichrome.h"
 
 // *** Objects
 SoftwareSerial xbee(0, 1); // MOSI, MISO
 // CSComms xbee(&s);
 CSTemp temp;
-SoftwareSerial gps(7,8);
+SoftwareSerial gpsss(7,8); CSGps gps(&gpsss);
 CSAlt alt;
 // CSLog sd;
 CSGyro gyro;
 CSTelem telem;
+CSNichrome nichrome;
 
 // *** Vars
 long currentTime    = 0;
@@ -51,7 +54,6 @@ double prevAlt = 0.0;
 void setup() {
     Serial.begin(9600);
     xbee.begin(9600);
-    gps.begin(9600);
     Wire.begin();
     // xbee.begin(9600);
     // gps.begin(9600);
@@ -62,9 +64,13 @@ void setup() {
     telem.teamID = 1234;
     // xbee.config();
     // temp.config(14, 3300);
-    alt.setGroundHeight(alt.read());
+    alt.setGroundHeight(alt.read()); // Danger!
     // sd.log("Booted up");
     telem.state = state_landed;
+    
+    gps.config();
+    
+    nichrome = CSNichrome(2);
 }
 
 // ********** Loop ************************************************************
@@ -82,16 +88,17 @@ void loop() {
         telem.altitude = alt.read(); 
         telem.temp = temp.read();
         
-        
         GyroData_t gyroData = gyro.getData();
         telem.gyro_x = gyroData.x;
         telem.gyro_y = gyroData.y;
         telem.gyro_z = gyroData.z;
         
+        
         // Update telemetry string
         dataString = telem.asString();
-        // sd.write(dataString);
         Serial.println(dataString);
+        xbee.println(dataString);
+        // sd.write(dataString);
         
         // Update velocity
         vel = telem.altitude - prevAlt;
@@ -122,17 +129,13 @@ void loop() {
                 break;
         }
         
-        xbee.println(dataString);
-        
         previousTime = currentTime;
     }
     
     // ***** Parallel threads:
 
     // Update GPS
-    if (gps.available()) {
-    	Serial.print((char)gps.read());
-    }
+    gps.update();
     
     // Update buzzer
     
@@ -151,6 +154,23 @@ void checkForCommands() {
             case 's':
                 //buzzer.deactivate();
                 break;
+            case 'x':
+                for (int t = 0; t < 2; t++) {
+                    xbee.println("Start cut " + String(t + 1));
+                    nichrome.start();
+                    for (int i = 0; i < 4; i++) {
+                        delay(1000);
+                    }
+                    xbee.println("Stop cut " + String(t + 1));
+                    nichrome.stop();
+                    if (t == 0) {
+                        delay(4000);
+                    }
+                }
+                break;
+            case 'g':
+                alt.setGroundHeight(alt.read());
+                break;
             default:
                 xbee.println("Invalid command: " + String(c));
         }
@@ -164,6 +184,20 @@ void checkForCommands() {
                 break;
             case 's':
                 //buzzer.deactivate();
+                break;
+            case 'x':
+                for (int t = 0; t < 2; t++) {
+                    xbee.println("Start cut " + String(t + 1));
+                    nichrome.start();
+                    for (int i = 0; i < 4; i++) {
+                        delay(1000);
+                    }
+                    xbee.println("Stop cut " + String(t + 1));
+                    nichrome.stop();
+                    if (t == 0) {
+                        delay(4000);
+                    }
+                }
                 break;
             default:
                 Serial.println("Invalid command: " + String(c));
@@ -179,6 +213,10 @@ void checkForCommands() {
 void boot_ops() {
     // On boot, check previous state and time from EEPROM
     // Make sure to recover state, met, and groundAlt
+    Serial.println("Bootup. Starting in 5 seconds...");
+    xbee.println("Bootup. Starting in 5 seconds...");
+    delay(5000);
+    telem.state = state_launchpad;
 }
 
 void launchpad_ops() {
@@ -197,13 +235,30 @@ void flight_ops() {
 }
 
 void deploy_ops() {
-    
+    for (int t = 0; t < 2; t++) {
+        xbee.println("Start cut " + String(t + 1));
+        Serial.println("Start cut " + String(t + 1));
+        nichrome.start();
+        for (int i = 0; i < 4; i++) {
+            delay(1000);
+        }
+        xbee.println("Stop cut " + String(t + 1));
+        Serial.println("Stop cut " + String(t + 1));
+        nichrome.stop();
+        if (t == 0) {
+            delay(4000);
+        }
+    }
+    telem.state = state_descent;
 }
 
 void descent_ops() {
-    
+    if (telem.altitude < CS_MIN_FLIGHT_THRESH) {
+        telem.state = state_landed;
+    }
 }
 
 void landed_ops() {
-    Serial.println("Testing...");
+    xbee.println("You are landed!");
+    Serial.println("You are landed!");
 }

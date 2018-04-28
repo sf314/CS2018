@@ -4,20 +4,21 @@
 #ifndef CSGps_h
 #define CSGps_h
 
+#include <Arduino.h>
 #include <stdbool.h>
 #include <stdint.h>
 #include <SoftwareSerial.h>
 #include "Adafruit_GPS.h"
 
-// Had to put software serial and adafruit stuff in the .ccp file
 
 class CSGps {
 public:
-    CSGps(Adafruit_GPS* agps); // Init
+    // CSGps(Adafruit_GPS* agps); // Init
+    CSGps(SoftwareSerial* ss);
     void config();
     void update();
+    void parsePacket();
     void debugln(String s);
-    void printAll();
     
     bool available();
     char read();
@@ -28,15 +29,19 @@ public:
     bool fix;
     
     // Position: Degrees
-    float lat;
-    float lon;
+    double lat;
+    double lon;
+    double time;
     
     // Time: 
     uint8_t hour, minute, seconds, year, month, day;
     
     bool shouldDebug;
+    String temp;
+    bool packetReceived;
 private:
-    Adafruit_GPS* adaGpsPtr;
+    // Adafruit_GPS* adaGpsPtr;
+    SoftwareSerial* serial;
 };
 
 
