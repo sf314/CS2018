@@ -18,7 +18,7 @@
 // double OTemp = 1;
 // Used to be double, but memory constraints (and tmp and Pa should only go down
 //double currentPaConv;
-//double currentPressAvg;
+// double Alt_currentPressAvg = 0;
 //double currentAltCm;
 
 namespace Intersema
@@ -95,11 +95,13 @@ class BaroPressure_MS5607B : public BaroPressure
 public:
     /// @param CSB  i2c address select
     BaroPressure_MS5607B(bool CSB = false) : i2cAddr_((CSB ? 0xEC : 0xEE) >> 1) { }
+    float internal_press;
 
     void init()
     {
         ResetSensor();
         ReadCoefficients();
+        internal_press = 0.0;
     }
 
 private:
@@ -198,6 +200,7 @@ private:
         }
 
         const int32_t pressAvg = pressAccum / nSamples;
+        internal_press = (float)pressAvg;
         const int32_t AltCm = PascalToCentimeter(pressAvg);
 
         return AltCm;

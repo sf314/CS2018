@@ -15,8 +15,8 @@ class CSGps {
 public:
     // CSGps(Adafruit_GPS* agps); // Init
     CSGps(SoftwareSerial* ss);
-    void config();
     void update();
+    void begin(int baud);
     void parsePacket();
     void debugln(String s);
     
@@ -43,6 +43,7 @@ private:
     // Adafruit_GPS* adaGpsPtr;
     SoftwareSerial* serial;
 };
+
 
 
 

@@ -8,16 +8,14 @@ CSCamera cam;
 
 void setup() {
     Serial.println(9600);
-    cam.config(12);
+    cam.config(5);
     delay(1000);
+    Serial.println("Running test in 5 seconds...");
 }
 
 void loop() {
-    Serial.println("Taking pic");
-    cam.takePic();
     
-    delay(1000);
-    
+    delay(3000);
     Serial.println("Taking vid");
     cam.turnOn();
     delay(5000);

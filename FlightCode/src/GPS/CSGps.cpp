@@ -33,7 +33,7 @@ void CSGps::update() {
             // cout << "\tupdate: end of packet" << endl;
             // Do checksum?
             // cout << "Packet: " << temp << endl; // Works
-            Serial.println("GPS: Packet = " + temp);
+            // Serial.println("GPS: Packet = " + temp);
             parsePacket();
             packetReceived = true;
         } else { // Simple append
@@ -41,16 +41,11 @@ void CSGps::update() {
             temp += c;
         }
     }
-}
-
-void CSGps::config() {
-    debugln("Configure");
-    serial->begin(9600); // throws error?
     
-    // Send commands for setting output
-    // adaGpsPtr->sendCommand(PMTK_SET_NMEA_OUTPUT_RMCGGA);
-    // adaGpsPtr->sendCommand(PMTK_SET_NMEA_UPDATE_1HZ);
-    // adaGpsPtr->sendCommand(PGCMD_ANTENNA); // This one too?
+    // if (packetReceived) {
+    //     Serial.println("Packet received!");
+    //     packetReceived = false;
+    // }
 }
 
 void CSGps::debugln(String s) {
@@ -68,8 +63,17 @@ char CSGps::read() {
     return serial->read();
 }
 
+void CSGps::begin(int baud) {
+    serial->begin(baud);
+}
+
+
+
+
+
 // $GPGGA,033109.297,3325.2589,N,11155.7849,W,1,09,0.88,394.6,M,-26.5,M,,*55
 void CSGps::parsePacket() {
+    Serial.println("CSGPS.parsePacket() on temp: " + temp);
     // Break packet into components. Update vars if certain packet type
     // Use atof instead of atoi (doubles instead of ints)
     // Operate on temp string
@@ -84,6 +88,7 @@ void CSGps::parsePacket() {
         // cout << "parsePacket: Read " << c << endl;
         if (c == ',' || c == '\r') { // Push current string onto list
             strings[current_i] = s;
+            Serial.println("\tFound: " + s);
             s = ""; // Reset current string
         } else if (c == '$') { // Don't push on the first bit
             // Skip
@@ -93,20 +98,24 @@ void CSGps::parsePacket() {
     }
     
     // Print all detected strings
-    // cout << "Packet parsed. Strings detected:" << endl;
-    for (int i = 0; i < 20; i++) {
-        // cout << "(" << strings[i] << ") ";
-        Serial.println(strings[i]);
-    }
-    // cout << endl;
     
     // Here is where you'd choose the packet type:
-    if (strings[0] == "GPGGA") {
+    // if (strings[0] == "GPGGA") {
+    if (temp.startsWith("$GPGGA")) {
         // cout << "^^This was a GPGGA packet!" << endl;
-        lat = atof(strings[2].c_str());
-        lon = atof(strings[4].c_str());
-        time = atof(strings[1].c_str());
-        altitude = atof(strings[9].c_str());
+        // lat = 
+        Serial.println("GPGGA found!");
+        Serial.println("\tlat: " + temp.substring());
+        Serial.println("\tlon: " + strings[4]);
+        // lat = atof(strings[2].c_str());
+        // lon = atof(strings[4].c_str());
+        // time = atof(strings[1].c_str());
+        // altitude = atof(strings[9].c_str());
+        // lat = strings[2].toDouble();
+        // lon = strings[4].toDouble();
+        // time = strings[1].toDouble();
+        // altitude = strings[9].toDouble();
+        packetReceived = true;
     } else {
         packetReceived = false; // Ignore all other types
     }

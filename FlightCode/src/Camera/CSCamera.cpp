@@ -11,23 +11,23 @@ CSCamera::CSCamera() {
 void CSCamera::config(int p) {
     pin = p;
     pinMode(pin, OUTPUT);
-    digitalWrite(pin, LOW);
+    digitalWrite(pin, HIGH);
 }
 
 void CSCamera::turnOn() {
-    digitalWrite(pin, HIGH);
-    delay(500);
     digitalWrite(pin, LOW);
+    delay(3000);
+    digitalWrite(pin, HIGH);
 }
 
 void CSCamera::turnOff() {
-    digitalWrite(pin, HIGH);
-    delay(500);
     digitalWrite(pin, LOW);
+    delay(3000);
+    digitalWrite(pin, HIGH);
 }
 
 void CSCamera::takePic() {
-    digitalWrite(pin, HIGH);
-    delay(100);
     digitalWrite(pin, LOW);
+    delay(100);
+    digitalWrite(pin, HIGH);
 }

@@ -57,5 +57,6 @@ float CSVolt::read() {
     
     float volt = average / 4095.0 * 3.3;
     float volt2 = (volt * 32.0 / 10);// - 0.32; // * 3.2?
-    return volt2 - 0.325;
+    float result = volt2 - 0.325;
+    return result;
 }

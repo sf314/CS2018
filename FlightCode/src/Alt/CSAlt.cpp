@@ -22,3 +22,7 @@ float CSAlt::altRadar() {
     float currentAlt = read();
     return currentAlt - groundHeight;
 }
+
+float CSAlt::press() {
+    return private_baro.internal_press;
+}

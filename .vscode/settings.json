@@ -1,0 +1,11 @@
+{
+    "files.associations": {
+        "__split_buffer": "cpp",
+        "string": "cpp",
+        "vector": "cpp",
+        "__locale": "cpp",
+        "iterator": "cpp",
+        "iosfwd": "cpp",
+        "stdexcept": "cpp"
+    }
+}

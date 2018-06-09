@@ -13,10 +13,8 @@ CSGps gps(&gpsss);
 
 void setup() {
     Serial.begin(9600);
-    // gps.begin(9600);
-    
-    gps.config();
-    gps.shouldDebug = true;
+    gps.begin(9600);
+    gps.shouldDebug = false;
     delay(1000);
     Serial.println("GPS start");
 }
@@ -30,6 +28,9 @@ void loop() {
     
     // // Update GPS constantly
     gps.update();
+    // if (gps.available()) {
+    //     Serial.print(gps.read());
+    // }
     
     // Periodically print data
     if (currentTime - previousTime >= 1000) {
@@ -53,3 +54,9 @@ void loop() {
     // }
     
 }
+
+
+
+
+//$GPGGA,033549.000,3212.9924,N,09811.3520,W,1,04,1.87,172.9,M,-22.9,M,,*54
+//$GPGGA,040829.000,3212.9917,N,09811.3485,W,2,05,1.32,295.1,M,-22.9,M,0000,0000*5B

@@ -11,8 +11,9 @@
 class CSAlt {
 public:
     void init();
-    float read();
-    float altRadar();
+    float read(); // Metres
+    float altRadar(); // Metres from ground height
+    float press(); // Pascals
     void setGroundHeight(float gh);
 private:
     float groundHeight = 0;

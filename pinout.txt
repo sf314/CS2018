@@ -1,15 +1,14 @@
-Pin assignments:
-Camera: 5
-Altimeter: (19,18) (I2C: SCL,SDA)
-GPS: (7, 8) (MISO, MOSI)
-Buzzer; 20
-RTC: (same as GPS)
-Nichrome: 2
-Volt: 15
-SD: 10
+Final pinout:
+0,1: XBee (MISO, MOSI)
+2: Nichrome
+5: Camera trigger
+7,8: GPS (MISO, MOSI)
+14: Temp
+15: Volt (A)
+16: Volt (B)
+17: Buzzer
+(18, 19): SDA, SCL (Alt)
 
-New redboard1 pinout:
-Temp: pin 14
-XBee: (0,1) (MISO, MOSI)
-GPS: (7,8) (MISO, MOSI)
-Buzzer: 17 (passive, can use tone() library!
+Blue dot: Butter
+Yellow dot: Peanut
+

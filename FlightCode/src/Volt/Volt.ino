@@ -3,13 +3,16 @@
 
 #include "CSVolt.h"
 
-CSVolt volt;
+CSVolt volt_A;
+CSVolt volt_B;
 
 void setup() {
     Serial.begin(9600);
-    volt.config(15);
-    volt.setDebugMode(true);
+    volt_A.config(15);
+    volt_A.setDebugMode(false);
     
+    volt_B.config(16);
+    volt_B.setDebugMode(false);
     // pinMode(16, INPUT);
     // analogReference(DEFAULT);
     // analogReadResolution(12);
@@ -27,8 +30,11 @@ void loop() {
     // float volt = r / 4095.0 * 3.3;
     // float volt2 = (volt * 32.0 / 10);// - 0.32; // * 3.2?
     // Serial.println(String(volt) + "," + String(volt2));
-
-    Serial.println(volt.read());
+    Serial.print("A: ");
+    Serial.println(volt_A.read());
+    
+    Serial.print("B: ");
+    Serial.println(volt_B.read());
     
     delay(500);
 }
