@@ -80,7 +80,7 @@ void setup() {
     volt_A.config(15);
     volt_A.config(16);
     
-    coreData.writeInt("teamID", 5278);
+    // coreData.writeInt("teamID", 5324);
     
     boot_ops(); // Recovery
 }
@@ -193,18 +193,17 @@ void performCommand(char c) {
         case 'x':
             Serial.println("LOG: Manual cut activated");
             xbee.println("LOG: Manual cut activated");
-            for (int t = 0; t < 2; t++) {
-                xbee.println("Start cut " + String(t + 1));
                 nichrome.start();
+                xbee.println("Start!");
+                Serial.println("Start!");
                 for (int i = 0; i < 4; i++) {
                     delay(1000);
+                    xbee.println(i);
+                    Serial.println(i);
                 }
-                xbee.println("Stop cut " + String(t + 1));
+                xbee.println("Stopping.");
+                Serial.println("Stopping.");
                 nichrome.stop();
-                if (t == 0) {
-                    delay(4000);
-                }
-            }
             break;
         case 'g':
             alt.setGroundHeight(alt.read());
@@ -215,7 +214,7 @@ void performCommand(char c) {
         case 'r':
             telem.met = 0;
             telem.packetCount = 0;
-            telem.state = 0;
+            telem.state = 1;
             coreData.writeLong(CS_CD_KEY_met, telem.met);
             coreData.writeLong(CS_CD_KEY_pCount, telem.packetCount);
             coreData.writeInt(CS_CD_KEY_state, telem.state);
@@ -262,7 +261,7 @@ void boot_ops() {
     prevAlt = alt.altRadar(); // Close
     
     telem.teamID = coreData.readInt("teamID");
-    // telem.state = state_landed;
+    telem.state = state_launchpad;
 }
 
 void launchpad_ops() {
@@ -286,8 +285,20 @@ void flight_ops() {
 
 void deploy_ops() {
     // Perform cut
+    // nichrome.start();
+    // delay(CS_CUTTIME);
+    // nichrome.stop();
+    
     nichrome.start();
-    delay(CS_CUTTIME);
+    xbee.println("Start!");
+    Serial.println("Start!");
+    for (int i = 0; i < 4; i++) {
+        delay(1000);
+        xbee.println(i);
+        Serial.println(i);
+    }
+    xbee.println("Stopping.");
+    Serial.println("Stopping.");
     nichrome.stop();
     
     // Start the camera
