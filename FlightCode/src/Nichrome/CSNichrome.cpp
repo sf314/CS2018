@@ -19,3 +19,7 @@ void CSNichrome::stop() {
     Serial.println("Stopping burn...");
     digitalWrite(pin, LOW);
 }
+
+void CSNichrome::config(int p) {
+    pin = p;
+}

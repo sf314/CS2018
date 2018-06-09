@@ -18,9 +18,9 @@ CSBuzzer::CSBuzzer() {
 void CSBuzzer::config(int p) {
     pin = p;
     pinMode(p, OUTPUT);
-    pinMode(p + 1, OUTPUT);
+    // pinMode(p + 1, OUTPUT);
     digitalWrite(pin, LOW);
-    digitalWrite(pin + 1, LOW);
+    // digitalWrite(pin + 1, LOW);
     isOn = false;
     songMode = false;
     debugln("CSBuzzer: configured on pin " + String(p));
@@ -81,13 +81,13 @@ void CSBuzzer::main() {
         //tone(pin, 700);
         
         digitalWrite(pin, HIGH);
-        digitalWrite(pin + 1, LOW);
+        // digitalWrite(pin + 1, LOW);
     } else {
         //digitalWrite(pin, LOW);
         //tone(pin, 700);
         
         digitalWrite(pin, LOW);
-        digitalWrite(pin + 1, LOW);
+        // digitalWrite(pin + 1, LOW);
     }
     
 }

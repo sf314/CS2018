@@ -12,5 +12,7 @@ void setup() {
 
 void loop() {
     Serial.println(temp.read());
+    Serial.println(temp.readRaw());
+    Serial.println(analogRead(14));
     delay(500);
 }

@@ -2,7 +2,6 @@
 
 #include <Arduino.h>
 #include <SoftwareSerial.h>
-#include "Adafruit_GPS.h"
 
 #include "CSGps.h"
 
@@ -17,6 +16,23 @@ void setup() {
     gps.shouldDebug = false;
     delay(1000);
     Serial.println("GPS start");
+    Serial.println("Test Vector start");
+    
+    CSVector vector;
+    vector.push_back("One");
+    vector.push_back("Two");
+    vector.push_back("Three");
+    vector.printAll();
+    
+    Serial.println("Examining: ");
+    Serial.println(vector.at(0));
+    Serial.println(vector.at(1));
+    Serial.println(vector.at(2));
+    Serial.println(vector.at(1));
+    Serial.println(vector.at(0));
+    
+    
+    vector.destroy();
 }
 
 long currentTime = 0;

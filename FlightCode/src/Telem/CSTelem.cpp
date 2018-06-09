@@ -16,7 +16,8 @@ CSTelem::CSTelem(int id) {
     altitude = 0.0;
     pressure = 0.0;
     temp = 0.0;
-    voltage = 0.0;
+    volt_A = 0.0;
+    volt_B = 0.0;
     state = 0;
     
     gps_time = 0;
@@ -37,7 +38,8 @@ CSTelem::CSTelem() {
     altitude = 0.0;
     pressure = 0.0;
     temp = 0.0;
-    voltage = 0.0;
+    volt_A = 0.0;
+    volt_B = 0.0;
     state = 0;
     
     gps_time = 0;
@@ -59,7 +61,7 @@ String CSTelem::asString() {
     returnString += String(altitude) + ",";
     returnString += String(pressure) + ",";
     returnString += String(temp) + ",";
-    returnString += String(voltage) + ",";
+    returnString += String(volt_A) + ",";
     returnString += String(gps_time) + ",";
     returnString += String(gps_lat) + ",";
     returnString += String(gps_lon) + ",";
@@ -68,6 +70,7 @@ String CSTelem::asString() {
     returnString += String(gyro_x) + ",";
     returnString += String(gyro_y) + ",";
     returnString += String(gyro_z) + ",";
-    returnString += String(state);
+    returnString += String(state) + ",";
+    returnString += String(volt_B);
     return returnString;
 }

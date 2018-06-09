@@ -21,6 +21,7 @@ class CSGyro {
 public:
     // Init
     CSGyro();
+    void config();
     
     // Vars
     

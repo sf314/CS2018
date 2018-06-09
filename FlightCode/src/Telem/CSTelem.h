@@ -18,17 +18,18 @@ public:
         int teamID; // fixed
         long met; // sec
         long packetCount; // count
-        double altitude; // metres
-        double pressure; // hectopascals? 1atm = 1013hPa, or 1013mbar
-        double temp; // °C
-        double voltage; // V
+        float altitude; // metres
+        float pressure; // hectopascals? 1atm = 1013hPa, or 1013mbar
+        float temp; // °C
+        float volt_A; // V
+        float volt_B; // V
         int state; // id
     
     // GPS vars
-        long gps_time; // number, but technically fielded. atoi()'ed
+        double gps_time; // number, but technically fielded. atoi()'ed
         double gps_lat; // deg
         double gps_lon; // deg
-        double gps_alt; // metres
+        float gps_alt; // metres
         int gps_sats; // count
         
     // Gyro vars

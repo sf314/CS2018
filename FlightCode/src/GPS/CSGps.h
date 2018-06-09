@@ -8,7 +8,24 @@
 #include <stdbool.h>
 #include <stdint.h>
 #include <SoftwareSerial.h>
-#include "Adafruit_GPS.h"
+
+
+typedef struct StringNode_t {
+    String s;
+    StringNode_t* next;
+} StringNode_t;
+
+class CSVector { // vector of Strings
+    public:
+    CSVector();
+    void push_back(String s);
+    String at(int i);
+    void destroy();
+    void printAll();
+    
+    StringNode_t* head;
+    int count;
+};
 
 
 class CSGps {
@@ -43,8 +60,6 @@ private:
     // Adafruit_GPS* adaGpsPtr;
     SoftwareSerial* serial;
 };
-
-
 
 
 #endif

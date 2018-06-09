@@ -11,6 +11,8 @@ public:
     CSNichrome(int p);
     CSNichrome();
     
+    void config(int p);
+    
     void start();
     void stop();
     

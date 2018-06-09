@@ -15,8 +15,8 @@ public:
     float altRadar(); // Metres from ground height
     float press(); // Pascals
     void setGroundHeight(float gh);
-private:
     float groundHeight = 0;
+private:
 };
 
 #endif

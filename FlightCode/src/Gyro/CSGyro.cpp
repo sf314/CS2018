@@ -3,6 +3,10 @@
 #include "CSGyro.h"
 
 CSGyro::CSGyro() {
+    
+}
+
+void CSGyro::config() {
     Wire.begin();
     
     imu.calibrateMPU9250(imu.gyroBias, imu.accelBias);
